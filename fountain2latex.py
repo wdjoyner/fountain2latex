@@ -4,6 +4,9 @@ fountain2latex.py
 ====================
 Fountain → LaTeX converter using screenplain as the parser.
 
+Output follows the US film-industry screenplay standard: 12pt Courier on
+US Letter paper, compiled with plain pdflatex.
+
 Install dependency:
     pip install screenplain
 
@@ -113,7 +116,7 @@ def plain_escape(text: str) -> str:
 # LATEX PREAMBLE
 # =============================================================================
 
-_PREAMBLE = r"""\documentclass[12pt]{article}
+_PREAMBLE = r"""\documentclass[12pt,letterpaper]{article}
 
 %% ---- Packages ----
 \usepackage[T1]{fontenc}
