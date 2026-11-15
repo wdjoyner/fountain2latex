@@ -135,11 +135,13 @@ Force a transition with `>`:
 
 ### Dual dialogue
 
+Put `^` after the *second* character's name; that speech is set side by side with the one just before it.
+
 ```
-CHUBUKOV ^
+CHUBUKOV
 Ours!
 
-LOMOV
+LOMOV ^
 Mine!
 ```
 

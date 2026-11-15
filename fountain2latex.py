@@ -172,6 +172,28 @@ _PREAMBLE = r"""\documentclass[12pt]{article}
   \vspace{2pt}%
 }
 
+% Dual dialogue: same elements, with indents sized to a half-page column
+% (inside multicols, \linewidth is the column width). [t] aligns the two
+% columns by their first lines rather than their vertical centers.
+\setlength{\columnsep}{0.3in}
+\raggedcolumns  % don't stretch the shorter column to match the taller one
+\newcommand{\DualCharacter}[1]{%
+  \vspace{8pt}%
+  \noindent\hspace{0.9in}#1\par%
+  \vspace{2pt}%
+}
+
+\newcommand{\DualDialogue}[1]{%
+  \noindent\parbox[t]{\linewidth}{\raggedright #1}\par%
+  \vspace{6pt}%
+}
+
+\newcommand{\DualParen}[1]{%
+  \vspace{-2pt}%
+  \noindent\hspace{0.5in}\parbox[t]{\dimexpr\linewidth - 0.5in}{\raggedright (#1)}\par%
+  \vspace{2pt}%
+}
+
 % Transition (flush right)
 \newcommand{\Trans}[1]{%
   \vspace{6pt}%
@@ -248,23 +270,28 @@ def _render_action(el: Action) -> str:
     return r'\Action{' + text + r'}'
 
 
-def _render_dialog(el: Dialog) -> str:
-    """Render a Dialog block: character name + blocks of dialogue/parens."""
-    parts = [r'\Character{' + richstring_to_latex(el.character) + r'}']
+def _render_dialog(el: Dialog, dual: bool = False) -> str:
+    """Render a Dialog block: character name + blocks of dialogue/parens.
+
+    With dual=True, use the \\Dual* macros, whose indents fit a half-page
+    column instead of the full text width.
+    """
+    prefix = 'Dual' if dual else ''
+    parts = ['\\' + prefix + 'Character{' + richstring_to_latex(el.character) + '}']
     for is_paren, line in el.blocks:
         text = richstring_to_latex(line)
         if is_paren:
             # strip surrounding parens screenplain leaves in the text
             inner = text.lstrip('(').rstrip(')')
-            parts.append(r'\Paren{' + inner + r'}')
+            parts.append('\\' + prefix + 'Paren{' + inner + '}')
         else:
-            parts.append(r'\Dialogue{' + text + r'}')
+            parts.append('\\' + prefix + 'Dialogue{' + text + '}')
     return '\n'.join(parts)
 
 
 def _render_dual_dialog(el: DualDialog) -> str:
-    left = _render_dialog(el.left)
-    right = _render_dialog(el.right)
+    left = _render_dialog(el.left, dual=True)
+    right = _render_dialog(el.right, dual=True)
     return (
         r'\begin{multicols}{2}' + '\n'
         + left + '\n'
