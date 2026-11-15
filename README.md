@@ -22,7 +22,7 @@ pip install screenplain
 ## Usage
 
 ```bash
-python fountain2latex_v2.py input.fountain
+python fountain2latex.py input.fountain
 ```
 
 This produces `input.tex` in the same directory. Then compile:
@@ -202,7 +202,7 @@ This package follows the US film-industry standard for screenplays: **12pt Couri
 
 ## Customizing formatting
 
-All formatting is controlled by LaTeX macros defined in the preamble of the generated `.tex` file — or equivalently in the `_PREAMBLE` string in `fountain2latex_v2.py`. You can edit them directly without touching any Python logic.
+All formatting is controlled by LaTeX macros defined in the preamble of the generated `.tex` file — or equivalently in the `_PREAMBLE` string in `fountain2latex.py`. You can edit them directly without touching any Python logic.
 
 Key macros:
 
@@ -253,9 +253,17 @@ FADE OUT.
 Run:
 
 ```bash
-python fountain2latex_v2.py the_proposal.fountain
+python fountain2latex.py the_proposal.fountain
 pdflatex -interaction=nonstopmode the_proposal.tex
 pdflatex -interaction=nonstopmode the_proposal.tex
+```
+
+The full play is included in this repo as `chekov_the-proposal_play-1988.fountain`, so you can also try:
+
+```bash
+python fountain2latex.py chekov_the-proposal_play-1988.fountain
+pdflatex -interaction=nonstopmode chekov_the-proposal_play-1988.tex
+pdflatex -interaction=nonstopmode chekov_the-proposal_play-1988.tex
 ```
 
 ---
@@ -265,22 +273,24 @@ pdflatex -interaction=nonstopmode the_proposal.tex
 If elements are being misclassified (e.g. a character name parsed as action, or a transition missed), use `--debug-ast` to inspect what screenplain produced:
 
 ```bash
-python fountain2latex_v2.py the_proposal.fountain --debug-ast
+python fountain2latex.py chekov_the-proposal_play-1988.fountain --debug-ast
 ```
 
-Output looks like:
+Output begins:
 
 ```
 === TITLE PAGE ===
   Title: ['THE PROPOSAL']
   Author: ['Anton Chekhov']
   Draft date: ['1888']
+  Contact: ['Public Domain']
+  Notes: ['A Jest in One Act. Translated from the Russian.']
 
-=== ELEMENTS (12) ===
-  [000] Slug: INT. CHUBUKOV'S COUNTRY HOUSE - DAY
-  [001] Action: A well-appointed drawing room. CHUBUKOV stands...
-  [002] Dialog: char=CHUBUKOV, blocks=2
-  [003] Dialog: char=LOMOV, blocks=1
+=== ELEMENTS (157) ===
+  [000] PageBreak
+  [001] Action: FADE IN:
+  [002] Slug: INT. CHUBUKOV'S COUNTRY HOUSE - DAY
+  [003] Action: A well-appointed drawing room. STEPAN STEPANOVITCH CHUBUKOV,
   ...
 ```
 
