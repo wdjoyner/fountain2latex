@@ -145,7 +145,7 @@ _PREAMBLE = r"""\documentclass[12pt]{article}
 % Action paragraph
 \newcommand{\Action}[1]{%
   \vspace{4pt}%
-  \noindent\parbox{\textwidth}{#1}\par%
+  \noindent\parbox{\textwidth}{\raggedright #1}\par%
 }
 
 % Centered action
@@ -162,7 +162,7 @@ _PREAMBLE = r"""\documentclass[12pt]{article}
 }
 
 \newcommand{\Dialogue}[1]{%
-  \noindent\hspace{1in}\parbox{\dimexpr\textwidth - 2in}{#1}\par%
+  \noindent\hspace{1in}\parbox{\dimexpr\textwidth - 2in}{\raggedright #1}\par%
   \vspace{6pt}%
 }
 
