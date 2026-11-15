@@ -183,10 +183,11 @@ Section headings (lines starting with `#`) are structural annotations used in wr
 
 ## Formatting defaults
 
-The generated LaTeX uses Hollywood-standard screenplay margins and Courier font throughout:
+This package follows the US film-industry standard for screenplays: **12pt Courier on US Letter paper (8.5in × 11in)**, with the margins below. The generated `.tex` file compiles with plain `pdflatex`; no XeLaTeX, LuaLaTeX, or special fonts are needed.
 
 | Element | Formatting |
 |---------|-----------|
+| Paper | US Letter, 8.5in × 11in |
 | Page margins | 1.5in left, 0.5in right, 1in top/bottom |
 | Font | Courier 12pt |
 | Scene headings | Bold, full text width |
