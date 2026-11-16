@@ -238,7 +238,7 @@ def _render_title_page(
         r'\vspace*{2in}',
     ]
     if title:
-        lines.append(r'{\Huge\textbf{' + title + r'}}\\[18pt]')
+        lines.append(r'{\LARGE\mdseries ' + title + r'}\\[18pt]')
     if author:
         lines.append(r'{\large Written by}\\[6pt]')
         lines.append(r'{\large ' + author + r'}\\[12pt]')
