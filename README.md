@@ -63,6 +63,14 @@ Contact: Public Domain
 Notes: A Jest in One Act. Translated from the Russian.
 ```
 
+A title may run over several lines, for a subtitle or a series line. Each line is centered on its own line: the first at title size, the rest smaller. Italics (`*...*`) are kept. Bold markers (`**...**`) are dropped, so the title stays regular-weight Courier.
+
+```
+Title:
+    **Finding Factor**
+    *An Avatar Academy Film*
+```
+
 ### Scene headings
 
 ```

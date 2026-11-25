@@ -30,6 +30,7 @@ written March 2026 - claude (mostly) and wdj (for sneaky latex spacing)
 from __future__ import annotations
 
 import argparse
+import re
 import sys
 from pathlib import Path
 from typing import List, Optional
@@ -227,7 +228,38 @@ def _render_title_page(
         rs_list = screenplay.get_rich_attribute(key)
         return r'\\'.join(richstring_to_latex(rs) for rs in rs_list)
 
-    title = cli_title or get('Title') or get('title')
+    def title_lines() -> List[str]:
+        """Title as a list of LaTeX lines.
+
+        A Fountain title may span several lines (a main title, then a
+        subtitle or series line) and may carry inline emphasis. Each source
+        line becomes its own centered line. Bold markers are dropped, so the
+        title stays regular-weight Courier; italics are kept.
+        """
+        if cli_title:
+            raw = [cli_title]
+        else:
+            raw = (screenplay.title_page.get('Title')
+                   or screenplay.title_page.get('title') or [])
+        out = []
+        for v in raw:
+            text = str(v).strip()
+            if not text:
+                continue
+            # ***x*** -> *x*; **x** and __x__ -> x (no bold on a title page)
+            text = re.sub(r'\*\*\*(.+?)\*\*\*', r'*\1*', text)
+            text = re.sub(r'\*\*(.+?)\*\*', r'\1', text)
+            text = re.sub(r'__(.+?)__', r'\1', text)
+            # Split on *italic* spans and escape each piece separately.
+            pieces = re.split(r'\*(.+?)\*', text)
+            out.append(''.join(
+                (r'\textit{' + plain_escape(piece) + '}') if i % 2
+                else plain_escape(piece)
+                for i, piece in enumerate(pieces) if piece
+            ))
+        return out
+
+    title = title_lines()
     author = cli_author or get('Author') or get('author') or get('Authors')
     draft_date = cli_draft_date or get('Draft date') or get('Draft Date')
     contact = get('Contact') or get('contact')
@@ -237,8 +269,11 @@ def _render_title_page(
         r'\centering',
         r'\vspace*{2in}',
     ]
-    if title:
-        lines.append(r'{\LARGE\mdseries ' + title + r'}\\[18pt]')
+    # Main title first; any further title lines (subtitle, series) smaller.
+    for i, tline in enumerate(title):
+        size = r'\LARGE\mdseries ' if i == 0 else r'\large\mdseries '
+        gap = '[18pt]' if i == len(title) - 1 else '[8pt]'
+        lines.append('{' + size + tline + r'}\\' + gap)
     if author:
         lines.append(r'{\large Written by}\\[6pt]')
         lines.append(r'{\large ' + author + r'}\\[12pt]')
